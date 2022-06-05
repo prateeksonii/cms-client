@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import userAtom from "../atoms/userAtom";
 
-const PrivatePage = ({ children }: { children: React.ReactNode }) => {
+const SuperAdminPage = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [user] = useAtom(userAtom);
 
@@ -10,13 +10,11 @@ const PrivatePage = ({ children }: { children: React.ReactNode }) => {
     router.replace("/signin");
   }
 
-  console.log(user);
-
-  if (user.role === "SUPER_ADMIN") {
-    router.replace("/super-admin");
+  if (user.role !== "SUPER_ADMIN") {
+    router.replace("/dashboard");
   }
 
   return <>{children}</>;
 };
 
-export default PrivatePage;
+export default SuperAdminPage;

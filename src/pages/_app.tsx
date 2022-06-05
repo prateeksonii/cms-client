@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { privateApi } from "../services/api";
 import { useAtom } from "jotai";
 import userAtom from "../atoms/userAtom";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const client = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Component {...pageProps} />
+      <QueryClientProvider client={client}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
       <ToastContainer theme="dark" />
     </>
   );

@@ -9,14 +9,12 @@ import userAtom from "../atoms/userAtom";
 import PublicPage from "../hoc/PublicPage";
 import { publicApi } from "../services/api";
 
-type SignupFormValues = {
-  name: string;
+type SigninFormValues = {
   email: string;
   password: string;
-  confirmPassword: string;
 };
 
-const SignupPage: NextPage = () => {
+const SigninPage: NextPage = () => {
   const router = useRouter();
   const [, setUser] = useAtom(userAtom);
 
@@ -27,21 +25,13 @@ const SignupPage: NextPage = () => {
     watch,
   } = useForm({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const password = watch("password");
-
-  const onSubmit: SubmitHandler<SignupFormValues> = async (values) => {
+  const onSubmit: SubmitHandler<SigninFormValues> = async (values) => {
     try {
-      await publicApi.post("/api/v1/users", {
-        fullName: values.name,
-        ...values,
-      });
       const res = await publicApi.post("/api/v1/auth/signin", {
         email: values.email,
         password: values.password,
@@ -70,22 +60,6 @@ const SignupPage: NextPage = () => {
             onSubmit={handleSubmit(onSubmit)}
             noValidate
           >
-            <div>
-              <label htmlFor="name" className="flex flex-col gap-1">
-                Full name
-                <input
-                  type="text"
-                  className="rounded-md bg-slate-600 p-2"
-                  placeholder="John doe"
-                  {...register("name", {
-                    required: "Name cannot be empty",
-                  })}
-                />
-              </label>
-              {errors.name && (
-                <div className="mt-1 text-red-500">{errors.name.message}</div>
-              )}
-            </div>
             <div>
               <label htmlFor="email" className="flex flex-col gap-1">
                 Email address
@@ -129,26 +103,6 @@ const SignupPage: NextPage = () => {
                 </div>
               )}
             </div>
-            <div>
-              <label htmlFor="confirmPassword" className="flex flex-col gap-1">
-                Confirm Password
-                <input
-                  type="password"
-                  className="rounded-md bg-slate-600 p-2"
-                  placeholder="Type your password again"
-                  {...register("confirmPassword", {
-                    required: "Confirm password cannot be empty",
-                    validate: (value) =>
-                      value === password || "Passwords do not match",
-                  })}
-                />
-              </label>
-              {errors.confirmPassword && (
-                <div className="mt-1 text-red-500">
-                  {errors.confirmPassword.message}
-                </div>
-              )}
-            </div>
             <button
               type="submit"
               className="!my-8 w-full rounded-md bg-blue-500 py-3 px-6"
@@ -176,4 +130,4 @@ const SignupPage: NextPage = () => {
   );
 };
 
-export default SignupPage;
+export default SigninPage;
